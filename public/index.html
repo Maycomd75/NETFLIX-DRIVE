@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Minha Netflix</title>
+
+<style>
+body{
+    background:#141414;
+    color:#fff;
+    font-family:Arial, sans-serif;
+    margin:0;
+}
+
+header{
+    color:#e50914;
+    font-size:30px;
+    padding:20px;
+    font-weight:bold;
+}
+
+.section{
+    padding:20px;
+}
+
+.grid{
+    display:flex;
+    gap:15px;
+    overflow-x:auto;
+    scroll-behavior: smooth; /* scroll suave */
+    padding-bottom:10px;
+}
+
+.movie{
+    cursor:pointer;
+    flex: 0 0 auto; /* força o tamanho mínimo fixo */
+    width:200px;    /* largura fixa */
+    transition:0.3s;
+}
+
+.movie:hover{
+    transform:scale(1.08);
+}
+
+.movie img{
+    width:100%;
+    height:300px;        /* altura fixa */
+    object-fit:cover;    /* recorta para preencher sem deformar */
+    border-radius:8px;
+    display:block;
+}
+
+.movie p{
+    text-align:center;
+    margin-top:5px;
+    font-size:14px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis; /* corta nomes muito longos */
+}
+
+.popup{
+    display:none;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.95);
+    z-index:1000;
+}
+
+.popup iframe{
+    width:100%;
+    height:100%;
+}
+
+.close-btn{
+    position:absolute;
+    top:20px;
+    right:30px;
+    font-size:40px;
+    color:white;
+    cursor:pointer;
+    z-index:1001;
+}
+</style>
+
+</head>
+<body>
+
+<header>🔥 MINHA NETFLIX</header>
+
+<div id="content"></div>
+
+<!-- PLAYER -->
+<div class="popup" id="popup">
+    <div class="close-btn" onclick="closePlayer()">✖</div>
+    <iframe id="player" frameborder="0" allowfullscreen></iframe>
+</div>
+
+<script>
+async function loadMovies(){
+    const res = await fetch('/api/movies');
+    const data = await res.json();
+    const content = document.getElementById("content");
+
+    content.innerHTML = "";
+
+    data.forEach(section=>{
+        const div = document.createElement("div");
+        div.className="section";
+        div.innerHTML=`<h2>${section.category}</h2>`;
+        
+        const grid = document.createElement("div");
+        grid.className="grid";
+
+        section.videos.forEach(movie=>{
+            const card=document.createElement("div");
+            card.className="movie";
+
+            card.innerHTML=`
+                <img src="capas/${movie.name}.jpg"
+                     onerror="this.src='https://placehold.co/200x300?text=Sem+Capa'">
+                <p>${movie.name}</p>
+            `;
+
+            card.onclick=()=>play(movie.id);
+            grid.appendChild(card);
+        });
+
+        div.appendChild(grid);
+        content.appendChild(div);
+    });
+}
+
+function play(id){
+    document.getElementById("player").src =
+        `https://drive.google.com/file/d/${id}/preview`;
+    document.getElementById("popup").style.display="block";
+}
+
+function closePlayer(){
+    const popup = document.getElementById("popup");
+    const player = document.getElementById("player");
+    popup.style.display="none";
+    player.src="";
+}
+
+// Fecha popup com ESC ou clicando fora do vídeo
+document.addEventListener("keydown", function(e){
+    if(e.key === "Escape") closePlayer();
+});
+
+document.getElementById("popup").addEventListener("click", function(e){
+    if(e.target === this) closePlayer();
+});
+
+loadMovies();
+</script>
+
+</body>
+</html>
