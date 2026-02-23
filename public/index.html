@@ -8,7 +8,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 
 <style>
-
 *{
     margin:0;
     padding:0;
@@ -30,12 +29,18 @@ header{
     position:fixed;
     top:0;
     width:100%;
-    padding:20px 40px;
-    background:linear-gradient(to bottom, rgba(0,0,0,0.9), transparent);
+    padding:18px 40px;
+    background:linear-gradient(to bottom, rgba(0,0,0,.9), transparent);
     display:flex;
     justify-content:space-between;
     align-items:center;
     z-index:999;
+    transition:.4s;
+}
+
+header.scrolled{
+    background:#000;
+    box-shadow:0 5px 20px rgba(0,0,0,.7);
 }
 
 .logo{
@@ -48,12 +53,11 @@ header{
     display:flex;
     gap:25px;
     font-size:14px;
-    opacity:0.85;
 }
 
 .menu span{
     cursor:pointer;
-    transition:0.3s;
+    opacity:.8;
 }
 
 .menu span:hover{
@@ -63,24 +67,29 @@ header{
 /* HERO */
 .hero{
     height:70vh;
-    background:url('https://placehold.co/1600x800/111/fff?text=FILME+DESTAQUE') center/cover no-repeat;
     display:flex;
     align-items:center;
-    padding:0 60px;
+    padding:60px;
     margin-bottom:40px;
 }
 
 .hero-content{
-    max-width:500px;
+    max-width:520px;
 }
 
 .hero h1{
-    font-size:50px;
+    font-size:48px;
+    margin-bottom:15px;
+}
+
+.hero p{
+    font-size:15px;
+    opacity:.85;
     margin-bottom:20px;
 }
 
 .hero button{
-    padding:12px 25px;
+    padding:12px 26px;
     border:none;
     margin-right:10px;
     font-weight:600;
@@ -94,7 +103,7 @@ header{
 }
 
 .info-btn{
-    background:rgba(255,255,255,0.3);
+    background:rgba(255,255,255,.3);
     color:#fff;
 }
 
@@ -121,15 +130,13 @@ header{
     gap:15px;
     overflow-x:auto;
     scroll-behavior:smooth;
-    padding-bottom:10px;
-    padding-left:40px;
+    padding-bottom:15px;
 }
 
 .grid::-webkit-scrollbar{
     display:none;
 }
 
-/* centraliza quando poucos filmes */
 .grid.few{
     justify-content:center;
 }
@@ -146,9 +153,9 @@ header{
     font-size:40px;
     cursor:pointer;
     background:linear-gradient(to right, rgba(0,0,0,.8), transparent);
-    z-index:20;
+    z-index:10;
     opacity:0;
-    transition:0.3s;
+    transition:.3s;
 }
 
 .row:hover .arrow{
@@ -167,10 +174,10 @@ header{
 /* CARD */
 .movie{
     position:relative;
-    cursor:pointer;
-    flex:0 0 auto;
     width:200px;
-    transition:0.4s ease;
+    flex:0 0 auto;
+    cursor:pointer;
+    transition:.4s;
 }
 
 .movie img{
@@ -181,34 +188,52 @@ header{
 }
 
 .movie:hover{
-    transform:scale(1.15);
-    z-index:10;
+    transform:scale(1.18);
+    z-index:20;
 }
 
-.movie::after{
-    content:"▶ Assistir";
+.movie-info{
     position:absolute;
-    bottom:10px;
-    left:10px;
-    right:10px;
-    background:rgba(0,0,0,0.7);
-    padding:8px;
-    text-align:center;
-    border-radius:4px;
+    bottom:0;
+    left:0;
+    right:0;
+    padding:12px;
+    background:linear-gradient(to top, rgba(0,0,0,.95), transparent);
+    border-radius:8px;
     opacity:0;
-    transition:0.3s;
+    transition:.3s;
 }
 
-.movie:hover::after{
+.movie:hover .movie-info{
     opacity:1;
 }
 
-/* POPUP */
+.movie-info h4{
+    font-size:14px;
+}
+
+.movie-info span{
+    font-size:12px;
+    opacity:.8;
+}
+
+.movie-info button{
+    margin-top:6px;
+    width:100%;
+    padding:6px;
+    border:none;
+    background:#e50914;
+    color:#fff;
+    border-radius:4px;
+    cursor:pointer;
+}
+
+/* POPUP PLAYER */
 .popup{
     display:none;
     position:fixed;
     inset:0;
-    background:rgba(0,0,0,0.95);
+    background:rgba(0,0,0,.95);
     z-index:2000;
     align-items:center;
     justify-content:center;
@@ -226,9 +251,21 @@ header{
     border-radius:10px;
 }
 
+/* LOADER */
+.loader{
+    position:absolute;
+    inset:0;
+    background:#000;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:22px;
+    z-index:5;
+}
+
 .close-btn{
     position:absolute;
-    top:-40px;
+    top:-45px;
     right:0;
     font-size:35px;
     cursor:pointer;
@@ -236,55 +273,43 @@ header{
 
 /* MOBILE */
 @media(max-width:600px){
+    header{
+        padding:12px 15px;
+    }
 
-header{
-    padding:12px 15px;
-}
+    .menu{
+        display:none;
+    }
 
-.logo{
-    font-size:20px;
-}
+    .hero{
+        height:45vh;
+        padding:20px;
+    }
 
-.menu{
-    display:none;
-}
+    .hero h1{
+        font-size:22px;
+    }
 
-.hero{
-    height:45vh;
-    padding:20px;
-}
+    .hero p{
+        font-size:13px;
+    }
 
-.hero h1{
-    font-size:22px;
-}
+    .section{
+        padding:15px;
+    }
 
-.hero button{
-    padding:8px 14px;
-    font-size:12px;
-}
+    .movie{
+        width:120px;
+    }
 
-.section{
-    padding:15px;
-}
+    .movie img{
+        height:170px;
+    }
 
-.movie{
-    width:120px;
+    .arrow{
+        display:none;
+    }
 }
-
-.movie img{
-    height:170px;
-}
-
-.arrow{
-    display:none;
-}
-
-.grid{
-    padding-left:10px;
-    -webkit-overflow-scrolling:touch;
-}
-}
-
 </style>
 </head>
 <body>
@@ -299,10 +324,11 @@ header{
     </div>
 </header>
 
-<div class="hero">
+<div class="hero" id="hero">
     <div class="hero-content">
-        <h1>Filme em Destaque</h1>
-        <button class="play-btn">▶ Assistir</button>
+        <h1 id="heroTitle">Carregando...</h1>
+        <p id="heroDesc"></p>
+        <button class="play-btn" id="heroPlay">▶ Assistir</button>
         <button class="info-btn">Mais Informações</button>
     </div>
 </div>
@@ -312,27 +338,43 @@ header{
 <div class="popup" id="popup">
     <div class="popup-content">
         <div class="close-btn" onclick="closePlayer()">✖</div>
+        <div class="loader" id="loader">Carregando filme...</div>
         <iframe id="player" frameborder="0" allowfullscreen></iframe>
     </div>
 </div>
 
 <script>
+// HEADER SCROLL
+window.addEventListener("scroll",()=>{
+    document.querySelector("header")
+    .classList.toggle("scrolled", window.scrollY > 80);
+});
 
+// LOAD MOVIES
 async function loadMovies(){
-    const content = document.getElementById("content");
-    content.innerHTML="<h2 style='padding:40px'>Carregando catálogo...</h2>";
+    const content=document.getElementById("content");
+    content.innerHTML="<h2 style='padding:40px'>Carregando...</h2>";
 
     try{
-        const res = await fetch('/api/movies');
-        const data = await res.json();
+        const res=await fetch("/api/movies");
+        const data=await res.json();
         content.innerHTML="";
+
+        // FILME DESTAQUE
+        const featured=data[0].videos[0];
+        document.getElementById("hero").style.background=
+        `linear-gradient(to right, rgba(0,0,0,.9), rgba(0,0,0,.3)),
+        url('capas/${featured.name}.jpg') center/cover no-repeat`;
+        document.getElementById("heroTitle").innerText=featured.name;
+        document.getElementById("heroDesc").innerText=
+        featured.description || "Assista agora no Minha Netflix";
+        document.getElementById("heroPlay").onclick=()=>play(featured.id);
 
         data.forEach(section=>{
             const div=document.createElement("div");
             div.className="section";
             div.innerHTML=`<h2>${section.category}</h2>`;
 
-            /* ROW */
             const row=document.createElement("div");
             row.className="row";
 
@@ -350,42 +392,40 @@ async function loadMovies(){
             left.onclick=()=>grid.scrollBy({left:-700,behavior:"smooth"});
             right.onclick=()=>grid.scrollBy({left:700,behavior:"smooth"});
 
-            if(section.videos.length <= 5){
-                grid.classList.add("few");
-            }
+            if(section.videos.length<=5) grid.classList.add("few");
 
             section.videos.forEach(movie=>{
                 const card=document.createElement("div");
                 card.className="movie";
-
                 card.innerHTML=`
-                    <img loading="lazy"
-                    src="capas/${movie.name}.jpg"
-                    onerror="this.src='https://placehold.co/200x300?text=Sem+Capa'">
-                `;
-
-                card.onclick=()=>play(movie.id);
+                <img src="capas/${movie.name}.jpg"
+                onerror="this.src='https://placehold.co/200x300?text=Sem+Capa'">
+                <div class="movie-info">
+                    <h4>${movie.name}</h4>
+                    <span>HD • ${movie.year || "2024"}</span>
+                    <button onclick="play('${movie.id}')">▶ Assistir</button>
+                </div>`;
                 grid.appendChild(card);
             });
 
-            row.appendChild(left);
-            row.appendChild(grid);
-            row.appendChild(right);
-
+            row.append(left,grid,right);
             div.appendChild(row);
             content.appendChild(div);
         });
 
-    }catch(error){
+    }catch{
         content.innerHTML="<h2 style='padding:40px'>Erro ao carregar catálogo</h2>";
     }
 }
 
+// PLAYER
 function play(id){
     document.body.classList.add("no-scroll");
-    document.getElementById("player").src =
-    `https://drive.google.com/file/d/${id}/preview`;
     document.getElementById("popup").style.display="flex";
+    document.getElementById("loader").style.display="flex";
+    const player=document.getElementById("player");
+    player.src=`https://drive.google.com/file/d/${id}/preview`;
+    player.onload=()=>document.getElementById("loader").style.display="none";
 }
 
 function closePlayer(){
@@ -394,12 +434,11 @@ function closePlayer(){
     document.getElementById("player").src="";
 }
 
-document.addEventListener("keydown", e=>{
+document.addEventListener("keydown",e=>{
     if(e.key==="Escape") closePlayer();
 });
 
 loadMovies();
-
 </script>
 </body>
 </html>
