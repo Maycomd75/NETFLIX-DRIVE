@@ -2,162 +2,295 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Minha Netflix</title>
 
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
 <style>
-body{
-    background:#141414;
-    color:#fff;
-    font-family:Arial, sans-serif;
+
+*{
     margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins', sans-serif;
 }
 
+body{
+    background:#0f0f0f;
+    color:#fff;
+}
+
+/* HEADER */
 header{
+    position:fixed;
+    top:0;
+    width:100%;
+    padding:20px 40px;
+    background:linear-gradient(to bottom, rgba(0,0,0,0.9), transparent);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    z-index:999;
+}
+
+.logo{
     color:#e50914;
-    font-size:30px;
-    padding:20px;
-    font-weight:bold;
+    font-size:28px;
+    font-weight:700;
+}
+
+.menu{
+    display:flex;
+    gap:25px;
+    font-size:14px;
+    opacity:0.8;
+}
+
+.menu span{
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.menu span:hover{
+    opacity:1;
+}
+
+/* HERO */
+.hero{
+    height:70vh;
+    background:url('https://placehold.co/1600x800/111/fff?text=FILME+DESTAQUE') center/cover no-repeat;
+    display:flex;
+    align-items:center;
+    padding:0 60px;
+    margin-bottom:40px;
+}
+
+.hero-content{
+    max-width:500px;
+}
+
+.hero h1{
+    font-size:50px;
+    margin-bottom:20px;
+}
+
+.hero button{
+    padding:12px 25px;
+    border:none;
+    margin-right:10px;
+    font-weight:600;
+    cursor:pointer;
+    border-radius:4px;
+}
+
+.play-btn{
+    background:#fff;
+    color:#000;
+}
+
+.info-btn{
+    background:rgba(255,255,255,0.3);
+    color:#fff;
+}
+
+/* CONTENT */
+#content{
+    padding-top:120px;
 }
 
 .section{
-    padding:20px;
+    padding:20px 40px;
+}
+
+.section h2{
+    margin-bottom:15px;
 }
 
 .grid{
     display:flex;
     gap:15px;
     overflow-x:auto;
-    scroll-behavior: smooth; /* scroll suave */
-    padding-bottom:10px;
+    scroll-behavior:smooth;
 }
 
+.grid::-webkit-scrollbar{
+    display:none;
+}
+
+/* CARD */
 .movie{
+    position:relative;
     cursor:pointer;
-    flex: 0 0 auto; /* força o tamanho mínimo fixo */
-    width:200px;    /* largura fixa */
-    transition:0.3s;
-}
-
-.movie:hover{
-    transform:scale(1.08);
+    flex:0 0 auto;
+    width:200px;
+    transition:0.4s ease;
 }
 
 .movie img{
     width:100%;
-    height:300px;        /* altura fixa */
-    object-fit:cover;    /* recorta para preencher sem deformar */
+    height:300px;
+    object-fit:cover;
     border-radius:8px;
-    display:block;
 }
 
-.movie p{
+.movie:hover{
+    transform:scale(1.15);
+    z-index:10;
+}
+
+.movie::after{
+    content:"▶ Assistir";
+    position:absolute;
+    bottom:10px;
+    left:10px;
+    right:10px;
+    background:rgba(0,0,0,0.7);
+    padding:8px;
     text-align:center;
-    margin-top:5px;
-    font-size:14px;
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis; /* corta nomes muito longos */
+    border-radius:4px;
+    opacity:0;
+    transition:0.3s;
 }
 
+.movie:hover::after{
+    opacity:1;
+}
+
+/* POPUP */
 .popup{
     display:none;
     position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
+    inset:0;
     background:rgba(0,0,0,0.95);
-    z-index:1000;
+    z-index:2000;
+    align-items:center;
+    justify-content:center;
+}
+
+.popup-content{
+    width:90%;
+    height:85%;
+    position:relative;
 }
 
 .popup iframe{
     width:100%;
     height:100%;
+    border-radius:10px;
 }
 
 .close-btn{
     position:absolute;
-    top:20px;
-    right:30px;
-    font-size:40px;
-    color:white;
+    top:-40px;
+    right:0;
+    font-size:35px;
     cursor:pointer;
-    z-index:1001;
 }
-</style>
 
+/* RESPONSIVO */
+@media(max-width:768px){
+    .hero h1{
+        font-size:30px;
+    }
+    .movie{
+        width:140px;
+    }
+    .movie img{
+        height:200px;
+    }
+}
+
+</style>
 </head>
 <body>
 
-<header>🔥 MINHA NETFLIX</header>
+<header>
+    <div class="logo">MINHA NETFLIX</div>
+    <div class="menu">
+        <span>Início</span>
+        <span>Séries</span>
+        <span>Filmes</span>
+        <span>Minha Lista</span>
+    </div>
+</header>
+
+<div class="hero">
+    <div class="hero-content">
+        <h1>Filme em Destaque</h1>
+        <button class="play-btn">▶ Assistir</button>
+        <button class="info-btn">Mais Informações</button>
+    </div>
+</div>
 
 <div id="content"></div>
 
-<!-- PLAYER -->
 <div class="popup" id="popup">
-    <div class="close-btn" onclick="closePlayer()">✖</div>
-    <iframe id="player" frameborder="0" allowfullscreen></iframe>
+    <div class="popup-content">
+        <div class="close-btn" onclick="closePlayer()">✖</div>
+        <iframe id="player" frameborder="0" allowfullscreen></iframe>
+    </div>
 </div>
 
 <script>
+
 async function loadMovies(){
-    const res = await fetch('/api/movies');
-    const data = await res.json();
     const content = document.getElementById("content");
+    content.innerHTML="<h2 style='padding:40px'>Carregando catálogo...</h2>";
 
-    content.innerHTML = "";
+    try{
+        const res = await fetch('/api/movies');
+        const data = await res.json();
+        content.innerHTML="";
 
-    data.forEach(section=>{
-        const div = document.createElement("div");
-        div.className="section";
-        div.innerHTML=`<h2>${section.category}</h2>`;
-        
-        const grid = document.createElement("div");
-        grid.className="grid";
+        data.forEach(section=>{
+            const div=document.createElement("div");
+            div.className="section";
+            div.innerHTML=`<h2>${section.category}</h2>`;
 
-        section.videos.forEach(movie=>{
-            const card=document.createElement("div");
-            card.className="movie";
+            const grid=document.createElement("div");
+            grid.className="grid";
 
-            card.innerHTML=`
-                <img src="capas/${movie.name}.jpg"
-                     onerror="this.src='https://placehold.co/200x300?text=Sem+Capa'">
-                <p>${movie.name}</p>
-            `;
+            section.videos.forEach(movie=>{
+                const card=document.createElement("div");
+                card.className="movie";
 
-            card.onclick=()=>play(movie.id);
-            grid.appendChild(card);
+                card.innerHTML=`
+                    <img loading="lazy"
+                    src="capas/${movie.name}.jpg"
+                    onerror="this.src='https://placehold.co/200x300?text=Sem+Capa'">
+                `;
+
+                card.onclick=()=>play(movie.id);
+                grid.appendChild(card);
+            });
+
+            div.appendChild(grid);
+            content.appendChild(div);
         });
 
-        div.appendChild(grid);
-        content.appendChild(div);
-    });
+    }catch(error){
+        content.innerHTML="<h2 style='padding:40px'>Erro ao carregar catálogo</h2>";
+    }
 }
 
 function play(id){
     document.getElementById("player").src =
-        `https://drive.google.com/file/d/${id}/preview`;
-    document.getElementById("popup").style.display="block";
+    `https://drive.google.com/file/d/${id}/preview`;
+    document.getElementById("popup").style.display="flex";
 }
 
 function closePlayer(){
-    const popup = document.getElementById("popup");
-    const player = document.getElementById("player");
-    popup.style.display="none";
-    player.src="";
+    document.getElementById("popup").style.display="none";
+    document.getElementById("player").src="";
 }
 
-// Fecha popup com ESC ou clicando fora do vídeo
-document.addEventListener("keydown", function(e){
-    if(e.key === "Escape") closePlayer();
-});
-
-document.getElementById("popup").addEventListener("click", function(e){
-    if(e.target === this) closePlayer();
+document.addEventListener("keydown", e=>{
+    if(e.key==="Escape") closePlayer();
 });
 
 loadMovies();
-</script>
 
+</script>
 </body>
 </html>
