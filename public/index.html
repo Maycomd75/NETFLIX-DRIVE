@@ -21,6 +21,10 @@ body{
     color:#fff;
 }
 
+body.no-scroll{
+    overflow:hidden;
+}
+
 /* HEADER */
 header{
     position:fixed;
@@ -44,7 +48,7 @@ header{
     display:flex;
     gap:25px;
     font-size:14px;
-    opacity:0.8;
+    opacity:0.85;
 }
 
 .menu span{
@@ -107,15 +111,57 @@ header{
     margin-bottom:15px;
 }
 
+/* CARROSSEL */
+.row{
+    position:relative;
+}
+
 .grid{
     display:flex;
     gap:15px;
     overflow-x:auto;
     scroll-behavior:smooth;
+    padding-bottom:10px;
+    padding-left:40px;
 }
 
 .grid::-webkit-scrollbar{
     display:none;
+}
+
+/* centraliza quando poucos filmes */
+.grid.few{
+    justify-content:center;
+}
+
+/* SETAS */
+.arrow{
+    position:absolute;
+    top:0;
+    bottom:0;
+    width:70px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:40px;
+    cursor:pointer;
+    background:linear-gradient(to right, rgba(0,0,0,.8), transparent);
+    z-index:20;
+    opacity:0;
+    transition:0.3s;
+}
+
+.row:hover .arrow{
+    opacity:1;
+}
+
+.arrow.right{
+    right:0;
+    background:linear-gradient(to left, rgba(0,0,0,.8), transparent);
+}
+
+.arrow.left{
+    left:0;
 }
 
 /* CARD */
@@ -188,17 +234,55 @@ header{
     cursor:pointer;
 }
 
-/* RESPONSIVO */
-@media(max-width:768px){
-    .hero h1{
-        font-size:30px;
-    }
-    .movie{
-        width:140px;
-    }
-    .movie img{
-        height:200px;
-    }
+/* MOBILE */
+@media(max-width:600px){
+
+header{
+    padding:12px 15px;
+}
+
+.logo{
+    font-size:20px;
+}
+
+.menu{
+    display:none;
+}
+
+.hero{
+    height:45vh;
+    padding:20px;
+}
+
+.hero h1{
+    font-size:22px;
+}
+
+.hero button{
+    padding:8px 14px;
+    font-size:12px;
+}
+
+.section{
+    padding:15px;
+}
+
+.movie{
+    width:120px;
+}
+
+.movie img{
+    height:170px;
+}
+
+.arrow{
+    display:none;
+}
+
+.grid{
+    padding-left:10px;
+    -webkit-overflow-scrolling:touch;
+}
 }
 
 </style>
@@ -248,8 +332,27 @@ async function loadMovies(){
             div.className="section";
             div.innerHTML=`<h2>${section.category}</h2>`;
 
+            /* ROW */
+            const row=document.createElement("div");
+            row.className="row";
+
+            const left=document.createElement("div");
+            left.className="arrow left";
+            left.innerHTML="❮";
+
+            const right=document.createElement("div");
+            right.className="arrow right";
+            right.innerHTML="❯";
+
             const grid=document.createElement("div");
             grid.className="grid";
+
+            left.onclick=()=>grid.scrollBy({left:-700,behavior:"smooth"});
+            right.onclick=()=>grid.scrollBy({left:700,behavior:"smooth"});
+
+            if(section.videos.length <= 5){
+                grid.classList.add("few");
+            }
 
             section.videos.forEach(movie=>{
                 const card=document.createElement("div");
@@ -265,7 +368,11 @@ async function loadMovies(){
                 grid.appendChild(card);
             });
 
-            div.appendChild(grid);
+            row.appendChild(left);
+            row.appendChild(grid);
+            row.appendChild(right);
+
+            div.appendChild(row);
             content.appendChild(div);
         });
 
@@ -275,12 +382,14 @@ async function loadMovies(){
 }
 
 function play(id){
+    document.body.classList.add("no-scroll");
     document.getElementById("player").src =
     `https://drive.google.com/file/d/${id}/preview`;
     document.getElementById("popup").style.display="flex";
 }
 
 function closePlayer(){
+    document.body.classList.remove("no-scroll");
     document.getElementById("popup").style.display="none";
     document.getElementById("player").src="";
 }
